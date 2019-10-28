@@ -1,0 +1,4 @@
+black_cat:
+  github:
+    org_name: 'octocat'
+    access_token: ''

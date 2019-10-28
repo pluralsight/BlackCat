@@ -1,0 +1,13 @@
+*
+!src/
+!src/**
+!config.example.yml
+!Pipfile
+!Pipfile.lock
+!.gitignore
+!README.md
+
+# Kill these
+**/__pycache__/**
+*.pyc
+src/**.pytest_cache
