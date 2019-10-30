@@ -62,7 +62,7 @@ class GraphQLCall(object):
     def __init__(self, query_fmt: str):
         self.query = query_fmt
 
-    def call(self, token: str, **kwargs: Optional[dict]):
+    def call(self, token: str, **kwargs: str):
         """
         Make a paginated request.
         :param token: The token to auth with
@@ -84,7 +84,7 @@ class GraphQLCall(object):
         # ratelimit = resp.headers.get('X-RateLimit-Remaining')
         return resp
 
-    def pages(self, token: str, cursor_var_name: str, **kwargs: Optional[dict]):
+    def pages(self, token: str, cursor_var_name: str, **kwargs: str):
         """
         Make a paginated request.
         :param token: The token to auth with
@@ -101,9 +101,17 @@ class GraphQLCall(object):
             else:
                 kwargs[cursor_var_name] = 'null'
             resp = self.call(token, **kwargs)
+            # Try one more time if we didn't get a 200.
+            retries = 0
+            while resp.status_code == 502 and retries < 5:
+                logging.info("Recieved unexpected 502. Sleeping for 5 seconds (Retry {}/5)...".format(resp.status_code, retries))
+                time.sleep(5)
+                resp = self.call(token, **kwargs)
+                retries += 1
+
             # Ratelimit logic
-            remaining_ratelimit = int(resp.headers.get('X-RateLimit-Remaining'))
-            reset_time = int(resp.headers.get('X-Ratelimit-Reset'))
+            remaining_ratelimit = int(resp.headers.get('X-RateLimit-Remaining', '1000'))
+            reset_time = int(resp.headers.get('X-Ratelimit-Reset', '0'))
 
             if remaining_ratelimit <= 400:
                 time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(reset_time))
@@ -114,14 +122,74 @@ class GraphQLCall(object):
                     time.sleep(300)
 
             # Next page
-            if not resp.json().get('data') or not resp.json().get('data').get('organization'):
-                raise InvalidQueryException(json.dumps(resp.json().get('errors')))
-            out.append(resp.json())
-            page_info = resp.json().get('data').get('organization').get('repositories').get('pageInfo')
+            json_res = resp.json()
+            if not json_res.get('data') or not json_res.get('data').get('organization'):
+                raise InvalidQueryException(json.dumps(json_res.get('errors')))
+            out.append(json_res)
+            page_info = json_res.get('data').get('organization').get('repositories').get('pageInfo')
             cursor = page_info.get('endCursor')
 
         return out
 
 
+class RepoVulnerabilityCall(GraphQLCall):
+    def pages(self, token: str, **kwargs: str):
+        pages = GraphQLCall.pages(self, token, 'after', **kwargs)
+        out = []
+        for page in pages:
+            out += [p for p in page.get('data').get('organization').get('repositories').get('edges')]
+        return out
+
+    def __init__(self):
+        super().__init__('''{{
+                              organization(login: {org_name}) {{
+                                repositories(first: 100, after: {after}) {{
+                                  edges {{
+                                    node {{
+                                      id,
+                                      url,
+                                      vulnerabilityAlerts(first: 100) {{
+                                        edges {{
+                                          node {{
+                                            securityVulnerability {{
+                                              advisory {{
+                                                id,
+                                                identifiers {{
+                                                    type, 
+                                                    value
+                                                }},
+                                                origin,
+                                                severity,
+                                                publishedAt,
+                                                updatedAt,
+                                                withdrawnAt
+                                              }}
+                                              package {{
+                                                ecosystem
+                                                name
+                                              }}
+                                              firstPatchedVersion {{
+                                                identifier
+                                              }}
+                                              vulnerableVersionRange
+                                              severity
+                                            }}
+                                          }}
+                                        }}
+                                        pageInfo {{
+                                          hasNextPage
+                                          endCursor
+                                        }}
+                                      }}
+                                    }}
+                                  }}
+                                  pageInfo {{
+                                    hasNextPage
+                                    endCursor
+                                  }}
+                                }}
+                              }}
+                            }}'''
+                         )
 
 

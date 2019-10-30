@@ -1,45 +1,23 @@
 import json
 
 from src.config import Config
-from src.github.graphql_call import GraphQLCall
+from src.github.graphql_call import RepoVulnerabilityCall
 
 if __name__ == '__main__':
     conf = Config()
-    query = GraphQLCall('''{{
-                      organization(login: {org_name}) {{
-                        repositories(first: 100, after: {after}) {{
-                          edges {{
-                            node {{
-                              url,
-                              vulnerabilityAlerts(first: 100) {{
-                                edges {{
-                                  node {{
-                                    securityVulnerability {{
-                                      package {{
-                                        ecosystem
-                                        name
-                                      }}
-                                      firstPatchedVersion {{
-                                        identifier
-                                      }}
-                                      vulnerableVersionRange
-                                      severity
-                                    }}
-                                  }}
-                                }}
-                                pageInfo {{
-                                  hasNextPage
-                                  endCursor
-                                }}
-                              }}
-                            }}
-                          }}
-                          pageInfo {{
-                            hasNextPage
-                            endCursor
-                          }}
-                        }}
-                      }}
-                    }}''')
-    out = query.pages(conf.github.access_token, cursor_var_name='after', org_name=conf.github.org_name)
-    print([json.dumps(out, indent=2))
+    query = RepoVulnerabilityCall()
+    out = query.pages(conf.github.access_token, org_name=conf.github.org_name)
+    filtered = [x for x in out if len(x.get('node').get('vulnerabilityAlerts').get('edges')) > 0]
+    print(json.dumps(filtered, indent=2))
+
+    for item in filtered:
+        data = item.get('node')
+        url = data.get('url')
+        print('URL: {}'.format(url))
+        for vuln in data.get('vulnerabilityAlerts').get('edges'):
+            vuln_data = vuln.get('node').get('securityVulnerability')
+            ecosystem = vuln_data.get('package').get('ecosystem')
+            package = vuln_data.get('package').get('name')
+            version_range = vuln_data.get('vulnerableVersionRange')
+            severity = vuln_data.get('severity')
+            print('{} dependency {} versions {} - {}'.format(ecosystem, package, version_range, severity))
