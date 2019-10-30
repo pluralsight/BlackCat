@@ -2,3 +2,12 @@ black_cat:
   github:
     org_name: 'octocat'
     access_token: ''
+  logging:
+    splunk:
+      domain: ''
+      port: 8888
+      proto: 'https'
+      index: 'main'
+      source_type: 'type'
+      hec_token: ''
+      enabled: false

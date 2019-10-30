@@ -104,7 +104,7 @@ class GraphQLCall(object):
             # Try one more time if we didn't get a 200.
             retries = 0
             while resp.status_code == 502 and retries < 5:
-                logging.info("Recieved unexpected 502. Sleeping for 5 seconds (Retry {}/5)...".format(resp.status_code, retries))
+                logging.info("Recieved unexpected 502. Sleeping for 5 seconds (Retry {}/5)...".format(retries))
                 time.sleep(5)
                 resp = self.call(token, **kwargs)
                 retries += 1
