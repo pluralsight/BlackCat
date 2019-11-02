@@ -1,4 +1,4 @@
-from src.config import Config
+from util.config import Config
 
 
 def test_config():

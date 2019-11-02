@@ -1,10 +1,11 @@
 import logging
+import os
 from abc import ABC, abstractmethod
 from typing import Optional
 
 import yaml
 
-from src.splunk_hec_handler import SplunkHecHandler
+from util.splunk_hec_handler import SplunkHecHandler
 
 
 class Config(object):
@@ -18,7 +19,8 @@ class Config(object):
 class GitHubConfig(object):
     def __init__(self, config: dict):
         self.org_name = config.get('org_name')
-        self.access_token = config.get('access_token')
+        # Get from environment variable or config
+        self.access_token = os.getenv('GIT_TOKEN', config.get('access_token'))
 
 
 class LoggingConfig(object):
@@ -45,7 +47,7 @@ class LoggingBackend(ABC):
 class SplunkLoggingBackend(LoggingBackend):
     def get_handler(self):
         return SplunkHecHandler(host=self.domain, token=self.hec_token, port=self.port,
-                                proto=self.proto, source=self.source_type, ssl_verify=True, index=self.index)
+                                proto=self.proto, sourcetype=self.source_type, ssl_verify=True, index=self.index)
 
     def __init__(self, config: dict):
         super().__init__(config)
@@ -54,4 +56,5 @@ class SplunkLoggingBackend(LoggingBackend):
         self.proto = config.get('proto')
         self.source_type = config.get('source_type')
         self.index = config.get('index')
-        self.hec_token = config.get('hec_token')
+        # Get from environment variable or config
+        self.hec_token = os.getenv('SPLUNK_HEC', config.get('hec_token'))

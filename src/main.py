@@ -1,22 +1,19 @@
+#!/usr/bin/env python3
+
 import json
 import logging
-import os
+import time
 
-from src.config import Config
-from src.github.graphql_call import RepoVulnerabilityCall
-from src.run_id import RunId
+from github.graphql_call import RepoVulnerabilityCall
+from util.config import Config
 
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.getLogger().setLevel(logging.DEBUG)
 
 if __name__ == '__main__':
-    # Track the current run ID
-    run_id = RunId()
-
     conf = Config()
-
-    # If config and logging worked, we inc run id, even if the API calls or filtering fail.
-    run_id.inc_run_id()
+    # Get time since epoch
+    start_time = round(time.time())
 
     # Query vulnerabilities
     query = RepoVulnerabilityCall()
@@ -30,7 +27,7 @@ if __name__ == '__main__':
         logging.info('URL: {}'.format(url))
         for vuln in data.get('vulnerabilityAlerts').get('edges'):
             vuln_data = vuln.get('node').get('securityVulnerability')
-            vuln_data['run_id'] = run_id.value
+            vuln_data['run_id'] = start_time
             vuln_data['repo_url'] = url
             # If an external logger such as splunk or syslog has been set, log the vuln there.
             # Otherwise, log to standard logger.
@@ -43,3 +40,6 @@ if __name__ == '__main__':
             version_range = vuln_data.get('vulnerableVersionRange')
             severity = vuln_data.get('severity')
             logging.info('{} dependency {} versions {} - {}'.format(ecosystem, package, version_range, severity))
+
+    total_time = round(time.time()) - start_time
+    logging.info('Finished in %d seconds.', total_time)

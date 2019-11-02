@@ -2,11 +2,10 @@ import json
 import logging
 import re
 import time
-from typing import Optional
 
 from pip._vendor import requests
 
-from src.github.exception import InvalidQueryException
+from github.exception import InvalidQueryException
 
 VALID_NAME = re.compile('[A-Za-z]+')
 REQUEST_FMT = "{}{}{ {} }"

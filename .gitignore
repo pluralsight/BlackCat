@@ -2,6 +2,13 @@
 !src/
 !src/**
 !config.example.yml
+
+# Containers
+!k8s
+!k8s/**
+!Dockerfile
+
+# Pipenv
 !Pipfile
 !Pipfile.lock
 !.gitignore
