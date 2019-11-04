@@ -10,4 +10,4 @@ black_cat:
       index: 'main'
       source_type: 'type'
       hec_token: ''
-      enabled: false
+      enabled: true
