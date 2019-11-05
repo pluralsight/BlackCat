@@ -142,25 +142,32 @@ class RepoVulnerabilityCall(GraphQLCall):
     def __init__(self):
         super().__init__('''{{
                               organization(login: {org_name}) {{
-                                repositories(first: 100, after: {after}) {{
+                                repositories(first: 100, isLocked: false, after: {after}) {{
                                   edges {{
                                     node {{
-                                      id,
-                                      url,
+                                      id
+                                      url
                                       vulnerabilityAlerts(first: 100) {{
                                         edges {{
                                           node {{
+                                            vulnerableManifestPath
+                                            dismisser {{
+                                              login
+                                              name
+                                            }}
+                                            dismissedAt
+                                            dismissReason
                                             securityVulnerability {{
                                               advisory {{
-                                                id,
+                                                id
                                                 identifiers {{
-                                                    type, 
-                                                    value
-                                                }},
-                                                origin,
-                                                severity,
-                                                publishedAt,
-                                                updatedAt,
+                                                  type
+                                                  value
+                                                }}
+                                                origin
+                                                severity
+                                                publishedAt
+                                                updatedAt
                                                 withdrawnAt
                                               }}
                                               package {{

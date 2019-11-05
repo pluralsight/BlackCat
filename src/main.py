@@ -26,15 +26,31 @@ if __name__ == '__main__':
         url = data.get('url')
         logging.info('URL: {}'.format(url))
         for vuln in data.get('vulnerabilityAlerts').get('edges'):
+
             vuln_data = vuln.get('node').get('securityVulnerability')
+            # Get metadata fields
+            dismisser = vuln.get('node').get('dismisser')
+            dismissed_at = vuln.get('node').get('dismissedAt')
+            dismissed_reason = vuln.get('node').get('dismissedReason')
+            manifest_file = vuln.get('node').get('vulnerableManifestPath')
+
+            # Push metadata into vuln object
+            vuln_data['dismisser'] = dismisser
+            vuln_data['dismissed_at'] = dismissed_at
+            vuln_data['dismissed_reason'] = dismissed_reason
+            vuln_data['manifest_file'] = manifest_file
+
+            # Push our metadata, repo url and run id
             vuln_data['run_id'] = start_time
             vuln_data['repo_url'] = url
+
             # If an external logger such as splunk or syslog has been set, log the vuln there.
             # Otherwise, log to standard logger.
             if conf.logging.logger:
                 conf.logging.logger.info(vuln_data)
             else:
                 logging.info(vuln_data)
+
             ecosystem = vuln_data.get('package').get('ecosystem')
             package = vuln_data.get('package').get('name')
             version_range = vuln_data.get('vulnerableVersionRange')

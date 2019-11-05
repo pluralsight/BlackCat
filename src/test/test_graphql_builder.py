@@ -1,5 +1,6 @@
+from unittest.mock import patch
+
 from src.github.graphql_call import dict_to_query, GraphQLCall, RepoVulnerabilityCall
-from unittest.mock import Mock, patch
 
 
 def test_dict_to_query():
