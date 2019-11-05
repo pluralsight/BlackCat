@@ -30,6 +30,8 @@ class LoggingConfig(object):
             self.logger = logging.getLogger('splunk')
             self.logger.setLevel(logging.INFO)
             SplunkLoggingBackend(self.splunk).apply_handler(self.logger)
+        else:
+            self.logger = None
 
 
 class LoggingBackend(ABC):

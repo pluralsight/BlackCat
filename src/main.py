@@ -31,7 +31,7 @@ if __name__ == '__main__':
             # Get metadata fields
             dismisser = vuln.get('node').get('dismisser')
             dismissed_at = vuln.get('node').get('dismissedAt')
-            dismissed_reason = vuln.get('node').get('dismissedReason')
+            dismissed_reason = vuln.get('node').get('dismissReason')
             manifest_file = vuln.get('node').get('vulnerableManifestPath')
 
             # Push metadata into vuln object
