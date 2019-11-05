@@ -18,7 +18,7 @@ class Config(object):
 
 class GitHubConfig(object):
     def __init__(self, config: dict):
-        self.org_name = config.get('org_name')
+        self.org_names = config.get('org_names')
         # Get from environment variable or config
         self.access_token = os.getenv('GIT_TOKEN', config.get('access_token'))
 
