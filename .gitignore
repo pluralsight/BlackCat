@@ -2,6 +2,7 @@
 !src/
 !src/**
 !config.example.yml
+!splunk-dashboard.xml
 
 # Containers
 !k8s
