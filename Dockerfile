@@ -1,4 +1,4 @@
-FROM python:3.6-alpine AS base
+FROM python:3.7-alpine AS base
 ENV PYROOT /pyroot
 ENV PYTHONUSERBASE $PYROOT
 
@@ -16,7 +16,7 @@ fi
 FROM base as builder
 COPY Pipfile* ./
 RUN pip install pipenv
-RUN pipenv install
+RUN pipenv install --python 3.7
 RUN PIP_USER=1 PIP_IGNORE_INSTALLED=1 pipenv install --system --deploy --ignore-pipfile
 
 FROM base
