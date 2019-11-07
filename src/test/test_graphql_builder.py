@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from src.github.graphql_call import dict_to_query, GraphQLCall, RepoVulnerabilityCall
+from github.graphql_call import dict_to_query, GraphQLCall, RepoVulnerabilityCall
 
 
 def test_dict_to_query():
@@ -17,7 +17,7 @@ def test_dict_to_query():
 
 def test_grapqhl_query():
     call = GraphQLCall('query {{ viewer {{ {viewer} }} }}')
-    with patch('src.github.graphql_call.requests.post') as p:
+    with patch('github.graphql_call.requests.post') as p:
         p.return_value.ok = True
         p.return_value.json = lambda: {'test': 'test'}
         resp = call.call('dummy', viewer='test')
@@ -64,7 +64,7 @@ def test_grapqhl_pages():
     }
 
     call = GraphQLCall('query {{ viewer {{ {viewer}, {after} }} }}')
-    with patch('src.github.graphql_call.requests.post') as p:
+    with patch('github.graphql_call.requests.post') as p:
         p.return_value.ok = True
         p.return_value.headers = {'X-RateLimit-Remaining': '500', 'X-Ratelimit-Reset': '0'}
         p.return_value.json = lambda: return_pages(page_one_json, page_two_json)
@@ -113,7 +113,7 @@ def test_vuln_query():
     }
 
     call = RepoVulnerabilityCall()
-    with patch('src.github.graphql_call.requests.post') as p:
+    with patch('github.graphql_call.requests.post') as p:
         p.return_value.ok = True
         p.return_value.json = lambda: return_pages(page_one_json, page_two_json)
         resp = call.pages('dummy', org_name='test')
