@@ -3,27 +3,12 @@
   <description>Github Dependency Vulnerabilities</description>
   <row>
     <panel>
-      <table>
-        <title>Run ID To Time</title>
-        <search>
-          <query>index="blackcat" | spath run_id| spath severity | fields + severity run_id |eval time=strftime(_time, "%m-%d-%Y %l:%M %p %Z") |stats min(time) as "Start Time" by run_id |sort by -run_id</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
-        </search>
-        <option name="count">10</option>
-        <option name="drilldown">none</option>
-        <option name="refresh.display">progressbar</option>
-      </table>
-    </panel>
-  </row>
-  <row>
-    <panel>
       <chart>
-        <title>Vulnerabilities By Severity</title>
+        <title>Vulnerabilities By Generic Severity</title>
         <search>
-          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | spath severity | fields + severity| top limit=5 severity</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" | spath severity | fields + severity| top limit=5 severity</query>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
         <option name="charting.axisTitleX.visibility">visible</option>
         <option name="charting.axisTitleY.visibility">visible</option>
@@ -43,11 +28,10 @@
       <chart>
         <title>Open Dependency Vulnerabilities Count by Repo (Top Ten)</title>
         <search>
-          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId | where run_id=MaxRunId |spath severity  | spath repo_url | fields + repo_url severity | eval repo=substr(repo_url, 20) |top repo limit=20 by severity |rename count as "Open Vulnerabilities"</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" |spath severity  | spath repo_url | fields + repo_url severity | eval repo=substr(repo_url, 20) |top repo limit=20 by severity |rename count as "Open Vulnerabilities"</query>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
-
         <option name="charting.axisTitleX.visibility">collapsed</option>
         <option name="charting.axisTitleY.visibility">collapsed</option>
         <option name="charting.axisTitleY2.visibility">collapsed</option>
@@ -70,12 +54,13 @@
   <row>
     <panel>
       <chart>
-        <title>Severity Per Run</title>
+        <title>Generic Severity Per Run</title>
         <search>
-          <query>index="blackcat" | spath run_id| spath severity | fields + severity run_id |chart count(severity) as "Open Vulnerabilities" over run_id by "severity"|sort -"Open Vulnerabilities"</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <query>index="blackcat"  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" | spath run_id| spath severity | fields + severity run_id |chart count(severity) as "Open Vulnerabilities" over run_id by "severity" | fieldformat run_id = strftime(run_id, "%Y-%m-%d %H:%M:%S UTC") |sort -"Open Vulnerabilities"</query>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
+        <option name="charting.axisTitleX.text">Run Date</option>
         <option name="charting.axisTitleX.visibility">visible</option>
         <option name="charting.axisTitleY.visibility">visible</option>
         <option name="charting.axisTitleY2.visibility">visible</option>
@@ -91,10 +76,11 @@
       <table>
         <title>Most Vulnerable Repos</title>
         <search>
-          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | spath repo_url | fields + repo_url | eval repo=substr(repo_url, 20) |stats count(repo_url) as "Open Vulnerabilities" by repo |sort -"Open Vulnerabilities"</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used"  | spath repo_url | fields + repo_url | eval repo=substr(repo_url, 20) |stats count(repo_url) as "Open Vulnerabilities" by repo |sort -"Open Vulnerabilities"</query>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
+        <option name="count">10</option>
         <option name="drilldown">none</option>
         <option name="refresh.display">progressbar</option>
       </table>
@@ -105,11 +91,12 @@
       <chart>
         <title>Vulnerabilities By Packages Per Run</title>
         <search>
-          <query>index="blackcat" | spath run_id| spath "package.name" | fields + "package.name" run_id |chart count("package.name") as "Open Vulnerabilities" over run_id by "package.name"</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <query>index="blackcat"| eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" | spath run_id| spath "package.name" | fields + "package.name" run_id |chart count("package.name") as "Open Vulnerabilities" over run_id by "package.name" | fieldformat run_id = strftime(run_id, "%Y-%m-%d %H:%M:%S UTC")</query>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.text">Run Date</option>
         <option name="charting.axisY.scale">linear</option>
         <option name="charting.chart">line</option>
         <option name="charting.chart.nullValueMode">gaps</option>
