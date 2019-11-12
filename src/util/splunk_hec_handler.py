@@ -68,7 +68,7 @@ class SplunkHecHandler(logging.Handler):
         :param host: Splunk server hostname or IP
         :param token: Splunk HEC Token
         (http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector#About_Event_Collector_tokens)
-        :param \**kwargs:
+        :param **kwargs:
             See below
 
         :keyword Arguments:
