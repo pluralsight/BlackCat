@@ -78,10 +78,8 @@ class GraphQLCall(object):
 
             data = data.format(**kwargs)
 
-        # requests.post({'query': data}, headers={'Authorization', 'bearer {}'.format(token)})
         resp = requests.post(url=self.ENDPOINT, headers={'Authorization': 'Bearer {}'.format(token)},
                              json={'query': data})
-        # ratelimit = resp.headers.get('X-RateLimit-Remaining')
         return resp
 
     def pages(self, token: str, cursor_var_name: str, **kwargs: str):
@@ -101,6 +99,7 @@ class GraphQLCall(object):
             else:
                 kwargs[cursor_var_name] = 'null'
             resp = self.call(token, **kwargs)
+
             # Try one more time if we didn't get a 200.
             retries = 0
             while resp.status_code == 502 and retries < 5:
@@ -126,6 +125,7 @@ class GraphQLCall(object):
             json_res = resp.json()
             if not json_res.get('data') or not json_res.get('data').get('organization'):
                 raise InvalidQueryException(json.dumps(json_res.get('errors')))
+
             out.append(json_res)
             page_info = json_res.get('data').get('organization').get('repositories').get('pageInfo')
             cursor = page_info.get('endCursor')
