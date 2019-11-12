@@ -28,3 +28,6 @@ slightly longer lines (max 120 chars)
 Commit messages should be descriptive and explain changes made. Please avoid squashing your commits, as that deletes
 part of the historical record. If multiple changes are included in a commit, consider  splitting it into multiple
 smaller commits or adding a list in the message body. Please keep commit bodies short if possible.
+
+## Maintainers
+* Dylan Katz (dylan-katz@pluralsight.com)
