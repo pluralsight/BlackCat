@@ -4,7 +4,7 @@
 BlackCat is a tool for the centralization of github dependency scanning outputs, mainly through output to splunk, which allows for
 better tracking and reporting at an organizational level using GitHub's dependency scanning functionality.
 ## Setup and Installation
-###Configuration
+### Configuration
 Before you begin, you'll need to enable dependency scanning for any repos you want reports on. To do this, I recommend using github's tool:  
 https://github.com/github/enable-security-alerts-sample  
 (may generate a lot of emails for larger organizations)  
@@ -34,7 +34,7 @@ Now that you've configured BlackCat, it can be deployed in a few ways:
 3. Run! `docker run blackcat:v1`
 
 #### Using Kubernetes
-**This assumes a basic knowledge of kubernetes, as well as an existing cluster and registry.**
+_This assumes a basic knowledge of kubernetes, as well as an existing cluster and registry._
 1. Go through the steps described in the `Using Docker` section above and publish that image to your container registry 
 2. Modify `k8s-cron.spec` to run at whatever interval you want (Defaults to every day at 15:00:00)
 3. Put your secrets in `secrets.yml` ([More Info](https://kubernetes.io/docs/concepts/configuration/secret/))
