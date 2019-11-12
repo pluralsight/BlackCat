@@ -11,6 +11,7 @@ from util.config import Config
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.getLogger().setLevel(logging.DEBUG)
 
+
 def handle_org(conf, org_name, start_time):
     query = RepoVulnerabilityCall()
     out = query.pages(conf.github.access_token, org_name=org_name)
@@ -76,6 +77,8 @@ def run(args, conf):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Manage or enable security alerts for github.')
-    parser.add_argument('--enable', action='store_true', help='Don\'t run a scan. Instead, enable alerts for all repos.')
-    parser.add_argument('--enable-start-page', type=int, default=0, help='Set the start page for an enable run. Has no effect if --enable isn\'t set.')
+    parser.add_argument('--enable', action='store_true',
+                        help='Don\'t run a scan. Instead, enable alerts for all repos.')
+    parser.add_argument('--enable-start-page', type=int, default=0, help='Set the start page for an enable run. '
+                                                                         'Has no effect if --enable isn\'t set.')
     run(parser.parse_args(), Config())

@@ -32,6 +32,7 @@ def dict_to_query(val: dict):
         out.append('{}:{}'.format(k, val[k]))
     return ','.join(out)
 
+
 def dict_to_fields(val: dict):
     """
     Converts a python dict to graphql fields.
@@ -52,7 +53,6 @@ def dict_to_fields(val: dict):
             val[k] = '"{}"'.format(val[k])
         out.append('{}:{}'.format(k, val[k]))
     return ','.join(out)
-
 
 
 class GraphQLCall(object):
@@ -79,7 +79,8 @@ class GraphQLCall(object):
             data = data.format(**kwargs)
 
         # requests.post({'query': data}, headers={'Authorization', 'bearer {}'.format(token)})
-        resp = requests.post(url=self.ENDPOINT, headers={'Authorization': 'Bearer {}'.format(token)}, json={'query': data})
+        resp = requests.post(url=self.ENDPOINT, headers={'Authorization': 'Bearer {}'.format(token)},
+                             json={'query': data})
         # ratelimit = resp.headers.get('X-RateLimit-Remaining')
         return resp
 
@@ -117,7 +118,8 @@ class GraphQLCall(object):
                 logging.info('Sleeping until ratelimit reset ({})...'.format(time_str))
                 time_delta = reset_time - time.time()
                 while time.time() < reset_time:
-                    logging.info('Timer will reset in {} seconds ({}). Sleeping for 300s...'.format(time_delta, time_str))
+                    logging.info(
+                        'Timer will reset in {} seconds ({}). Sleeping for 300s...'.format(time_delta, time_str))
                     time.sleep(300)
 
             # Next page
@@ -197,5 +199,3 @@ class RepoVulnerabilityCall(GraphQLCall):
                               }}
                             }}'''
                          )
-
-

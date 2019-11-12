@@ -4,14 +4,17 @@ ENV PYTHONUSERBASE $PYROOT
 
 WORKDIR /opt/blackcat
 COPY src/ ./src
-COPY config*.yml ./
+COPY config.example.yml ./
 # Make an empty config file if one doesn't exist.
 RUN touch /opt/blackcat/config.yml
 
+# I commented this out because it would create security risks
+# if images were built/published with legitimate configs included.
 # If config is empty, replace with example config, else remove example config.
-RUN if [ ! -s '/opt/blackcat/config.yml' ]; then  mv -f /opt/blackcat/config.example.yml /opt/blackcat/config.yml;\
- else  rm -f /opt/blackcat/config.example.yml; \
-fi
+#RUN if [ ! -s '/opt/blackcat/config.yml' ]; then  mv -f /opt/blackcat/config.example.yml /opt/blackcat/config.yml;\
+# else  rm -f /opt/blackcat/config.example.yml; \
+#fi
+RUN mv -f /opt/blackcat/config.example.yml /opt/blackcat/config.yml
 
 FROM base as builder
 COPY Pipfile* ./
