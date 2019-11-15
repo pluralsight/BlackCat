@@ -26,8 +26,8 @@ class AlertEnabler(object):
                 resp = self.enable_for_repo(repo_id)
                 success = resp.status_code == 204
                 if not success:
-                    logging.warn("Unable to enable vulnerabilities for repo {}. Status code: {}. Body: {}"
-                                 .format(repo_id, resp.status_code, resp.text))
+                    logging.warning("Unable to enable vulnerabilities for repo {}. Status code: {}. Body: {}"
+                                    .format(repo_id, resp.status_code, resp.text))
                 if idx % 10 == 0:
                     logging.info('Sent enable for {} repos so far...'.format(idx))
                 time.sleep(0.5)

@@ -12,6 +12,13 @@ spec:
           - name: blackcat
             image: blackcat
             args: []
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
             env:
               - name: SPLUNK_HEC
                 valueFrom:

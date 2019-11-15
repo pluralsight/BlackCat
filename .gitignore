@@ -1,23 +1,33 @@
+# We use a whitelisting-based .gitignore.
+# For reference: https://dylankatz.com/Why-We-Fail-At-Keeping-Git-Secrets/
 *
 !src/
 !src/**
 !config.example.yml
-!splunk-dashboard.xml
 
 # Containers
 !k8s
 !k8s/secrets.example.yml
-!k8s/k8s-cron.spec
-!k8s/enabler-cron.spec
+!k8s/*.spec
 !Dockerfile
 
 # Pipenv
 !Pipfile
 !Pipfile.lock
+
+# Misc
 !.gitignore
 !README.md
+!splunk-dashboard.xml
+!.flake8
+!CONTRIBUTING.md
+!CHANGELOG.md
+!CODE_OF_CONDUCT.md
+!.github
+!.github/**
+!run_test.sh
 
 # Kill these
 **/__pycache__/**
 *.pyc
-src/**.pytest_cache
+**/.pytest_cache
