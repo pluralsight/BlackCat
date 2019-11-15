@@ -10,7 +10,7 @@ import requests
 
 class SplunkHecHandler(logging.Handler):
     """
-    This module returns a python logging handler capable of sending logs records to a Splunk HTTP Event Collector
+    This module returns a python logging handler capable of sending log records to a Splunk HTTP Event Collector
     listener.  Log records can be simple string or dictionary.  In the latter case, if the sourcetype is configured
     to be _json (or variant), JSON format of the log message will be preserved.
 
