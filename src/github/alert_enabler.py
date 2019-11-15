@@ -37,10 +37,8 @@ class AlertEnabler(object):
         logging.info('Done! Flagged {} repos for security alerts.'.format(idx))
 
     def get_endpoint(self, url):
-        # requests.post({'query': data}, headers={'Authorization', 'bearer {}'.format(token)})
         resp = requests.get(url=url, headers={'Authorization': 'Bearer {}'.format(self.token),
                                               'Accept': 'application/vnd.github.dorian-preview+json'})
-        # ratelimit = resp.headers.get('X-RateLimit-Remaining')
         return resp.json()
 
     def enable_for_repo(self, repo_id):

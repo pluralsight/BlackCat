@@ -10,51 +10,6 @@ from github.exception import InvalidQueryException
 VALID_NAME = re.compile('[A-Za-z]+')
 REQUEST_FMT = "{}{}{ {} }"
 
-
-def dict_to_query(val: dict):
-    """
-    Converts a python dict to graphql query.
-    {'a': 'b', 'c': 1}
-     becomes
-     "a: 'b', b: 1"
-    :param val: The dict to use
-    :return: The query string
-    """
-    if not val:
-        return ''
-    out = []
-    for k in val:
-        if not val[k]:
-            raise InvalidQueryException('Missing value for query parameter {}'.format(k))
-
-        if isinstance(val[k], str):
-            val[k] = '"{}"'.format(val[k])
-        out.append('{}:{}'.format(k, val[k]))
-    return ','.join(out)
-
-def dict_to_fields(val: dict):
-    """
-    Converts a python dict to graphql fields.
-    {'edges': {'node': {'url'}}
-     becomes
-     a {
-    :param val: The dict to use
-    :return: The query string
-    """
-    if not val:
-        return ''
-    out = []
-    for k in val:
-        if not val[k]:
-            raise InvalidQueryException('Missing value for query parameter {}'.format(k))
-
-        if isinstance(val[k], str):
-            val[k] = '"{}"'.format(val[k])
-        out.append('{}:{}'.format(k, val[k]))
-    return ','.join(out)
-
-
-
 class GraphQLCall(object):
     ENDPOINT = 'https://api.github.com/graphql'
 
