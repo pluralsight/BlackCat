@@ -1,5 +1,8 @@
 # BlackCat
-🐈🎃 _Dependencies can be spooky!_ 🎃🐈
+🐈🎃 _Dependencies can be spooky!_ 🎃🐈  
+  
+![](https://img.shields.io/github/v/tag/pluralsight/blackcat?color=%2300CC00&label=Latest%20Git%20Tag&style=flat-square) 
+![](https://img.shields.io/docker/pulls/pssecops/blackcat?label=Docker%20Pulls&style=flat-square)
 
 BlackCat is a tool for the centralization of github dependency scanning outputs, mainly through output to splunk, which allows for
 better tracking and reporting at an organizational level using GitHub's dependency scanning functionality.
