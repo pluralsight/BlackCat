@@ -54,10 +54,11 @@ class SplunkLoggingBackend(LoggingBackend):
 
     def __init__(self, config: dict):
         super().__init__(config)
-        self.domain = config.get('domain')
-        self.port = config.get('port')
+        self.domain = os.getenv('SPLUNK_DOMAIN', config.get('domain'))
+        self.port = os.getenv('SPLUNK_PORT', config.get('port'))
         self.proto = config.get('proto')
         self.source_type = config.get('source_type')
         self.index = config.get('index')
+
         # Get from environment variable or config
         self.hec_token = os.getenv('SPLUNK_HEC', config.get('hec_token'))

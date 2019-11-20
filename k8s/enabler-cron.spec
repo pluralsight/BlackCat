@@ -23,6 +23,18 @@ spec:
                   memory: "512Mi"
                   cpu: "500m"
               env:
+                - name: SPLUNK_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: blackcat-secret
+                      key: splunk_port
+
+                - name: SPLUNK_DOMAIN
+                  valueFrom:
+                    secretKeyRef:
+                      name: blackcat-secret
+                      key: splunk_domain
+
                 - name: SPLUNK_HEC
                   valueFrom:
                     secretKeyRef:
@@ -34,9 +46,11 @@ spec:
                     secretKeyRef:
                       name: blackcat-secret
                       key: org_names
+
                 - name: GIT_TOKEN
                   valueFrom:
                     secretKeyRef:
                       name: blackcat-secret
                       key: git_token
+
           restartPolicy: OnFailure
