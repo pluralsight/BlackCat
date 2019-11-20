@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
             - name: blackcat
-              image: blackcat
+              image: pssecops/blackcat
               args: []
               resources:
                 requests:
