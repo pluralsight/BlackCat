@@ -12,8 +12,6 @@ spec:
             - name: blackcat
               image: pssecops/blackcat
               args:
-                - "python"
-                - "src/main.py"
                 - "--enable"
               resources:
                 requests:
