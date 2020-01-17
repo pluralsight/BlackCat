@@ -3,7 +3,7 @@ from typing import Callable, Dict, Any
 from postprocessing.steps.post_process_step import PostProcessStep
 
 
-class PostProcessor(object):
+class BlackCatPostProcessor(object):
     __STEPS = []
     @classmethod
     def add_post_step(cls, step: PostProcessStep):

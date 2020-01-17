@@ -1,9 +1,10 @@
 # We use a whitelisting-based .gitignore.
 # For reference: https://dylankatz.com/Why-We-Fail-At-Keeping-Git-Secrets/
 *
-!src/
-!src/**
+!blackcat/
+!blackcat/**
 !config.example.yml
+!setup.py
 
 # Containers
 !k8s

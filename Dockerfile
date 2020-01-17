@@ -3,7 +3,7 @@ ENV PYROOT /pyroot
 ENV PYTHONUSERBASE $PYROOT
 
 WORKDIR /opt/blackcat
-COPY src/ ./src
+COPY blackcat ./src
 COPY config.example.yml ./
 # Make an empty config file if one doesn't exist.
 RUN touch /opt/blackcat/config.yml

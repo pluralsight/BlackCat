@@ -1,4 +1,4 @@
-from postprocessing.post_processor import PostProcessor
+from postprocessing.post_processor import BlackCatPostProcessor
 from postprocessing.steps.trim_to_relevant_data import PostStepFlattenRelevantData
 
 
@@ -14,8 +14,8 @@ class TestPostProcessor(object):
     }
 
     def test_post_processor(self):
-        PostProcessor.add_post_step(PostStepFlattenRelevantData())
-        out = PostProcessor.run(1, 'test_org', 'https://www.google.com', self.TEST_OBJ)
+        BlackCatPostProcessor.add_post_step(PostStepFlattenRelevantData())
+        out = BlackCatPostProcessor.run(1, 'test_org', 'https://www.google.com', self.TEST_OBJ)
         assert out == {
             'test-field': True,
             'dismisser': 'Nobody',
