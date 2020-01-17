@@ -1,6 +1,11 @@
 # Changelog
 Document of major or noteworth changes made between versions.
 We use [SemVer](https://semver.org/) for Versioning.
+##  1.0.4
+* Added support for post-processing steps
+* Made more usable as a module/librar
+* Added setup.py
+
 ##  1.0.3  
 * Fixed error with enabler cron
 

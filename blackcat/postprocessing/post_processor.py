@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Any
+from typing import Dict, Any
 
 from postprocessing.steps.post_process_step import PostProcessStep
 

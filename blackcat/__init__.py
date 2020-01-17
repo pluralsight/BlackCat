@@ -55,4 +55,3 @@ class BlackCat(object):
 
         total_time = round(time.time()) - start_time
         logging.info('Finished in %d seconds.', total_time)
-
