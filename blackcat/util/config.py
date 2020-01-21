@@ -5,7 +5,7 @@ from typing import Optional
 
 import yaml
 
-from util.splunk_hec_handler import SplunkHecHandler
+from blackcat.util.splunk_hec_handler import SplunkHecHandler
 
 
 class Config(object):
