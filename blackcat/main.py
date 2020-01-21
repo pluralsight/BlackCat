@@ -2,7 +2,7 @@
 import argparse
 import logging
 
-from blackcat import BlackCat
+from blackcat_controller import BlackCat
 from util.config import Config
 
 if __name__ == '__main__':

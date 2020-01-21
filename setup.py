@@ -5,4 +5,4 @@ setup(name='blackcat',
       description='Centralized reporting on GitHub dependency scanning outputs',
       author='Dylan Katz',
       author_email='dylan-katz@-pluralsight.com',
-      packages=['blackcat', 'blackcat.postprocessing'])
+      packages=['blackcat', 'blackcat.postprocessing', 'blackcat.postprocessing.steps'])
