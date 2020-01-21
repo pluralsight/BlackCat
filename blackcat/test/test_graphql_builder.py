@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
-from blackcat import RepoVulnerabilityCall
-from github.graphql_call import GraphQLCall
+from github.graphql_call import GraphQLCall, RepoVulnerabilityCall
 
 
 def test_grapqhl_query():
