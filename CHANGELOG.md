@@ -1,6 +1,8 @@
 # Changelog
 Document of major or noteworth changes made between versions.
 We use [SemVer](https://semver.org/) for Versioning.
+##  1.0.5
+* Dockerfile fixes
 ##  1.0.4
 * Added support for post-processing steps
 * Made more usable as a module/librar
