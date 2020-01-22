@@ -29,4 +29,4 @@ COPY --from=builder $PYROOT/lib $PYROOT/lib
 
 RUN addgroup -S usergroup && adduser -S blackcat -G usergroup
 USER blackcat
-ENTRYPOINT ["python", "blackcat/main.py"]
+ENTRYPOINT ["python", "-m", "blackcat.main"]

@@ -11,4 +11,4 @@ black_cat:
       index: 'blackcat'
       source_type: 'blackcat'
       hec_token: ''
-      enabled: false
+      enabled: true
