@@ -2,8 +2,8 @@
 import argparse
 import logging
 
-from blackcat_controller import BlackCat
-from util.config import Config
+from blackcat.blackcat_controller import BlackCat
+from blackcat.util.config import Config
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s %(message)s')

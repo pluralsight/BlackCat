@@ -3,9 +3,9 @@ import logging
 import re
 import time
 
-from pip._vendor import requests
+import requests
 
-from github.exception import InvalidQueryException
+from blackcat.github.exception import InvalidQueryException
 
 VALID_NAME = re.compile('[A-Za-z]+')
 REQUEST_FMT = "{}{}{ {} }"

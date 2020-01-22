@@ -1,6 +1,6 @@
 from unittest import mock
 
-from util.config import Config
+from blackcat.util.config import Config
 
 
 def test_config():

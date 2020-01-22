@@ -1,10 +1,10 @@
 import logging
 import time
 
-from github.alert_enabler import AlertEnabler
-from github.graphql_call import RepoVulnerabilityCall
-from postprocessing.post_processor import BlackCatPostProcessor
-from postprocessing.steps.trim_to_relevant_data import PostStepFlattenRelevantData
+from blackcat.github.alert_enabler import AlertEnabler
+from blackcat.github.graphql_call import RepoVulnerabilityCall
+from blackcat.postprocessing.post_processor import BlackCatPostProcessor
+from blackcat.postprocessing.steps.trim_to_relevant_data import PostStepFlattenRelevantData
 
 
 class BlackCat(object):
@@ -37,7 +37,7 @@ class BlackCat(object):
     @classmethod
     def execute_cli(cls, args, conf):
         enabler = None
-        if args.enable:
+        if args and args.enable:
             enabler = AlertEnabler(conf.github.access_token)
 
         BlackCatPostProcessor.add_post_step(PostStepFlattenRelevantData())
@@ -47,7 +47,7 @@ class BlackCat(object):
 
         # Query vulnerabilities
         for org_name in conf.github.org_names:
-            if args.enable:
+            if args and args.enable:
                 logging.info('Enabling alerts for Organization {}'.format(org_name))
                 enabler.run(org_name, args.enable_start_page)
             else:

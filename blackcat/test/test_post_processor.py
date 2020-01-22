@@ -1,5 +1,5 @@
-from postprocessing.post_processor import BlackCatPostProcessor
-from postprocessing.steps.trim_to_relevant_data import PostStepFlattenRelevantData
+from blackcat.postprocessing.post_processor import BlackCatPostProcessor
+from blackcat.postprocessing.steps.trim_to_relevant_data import PostStepFlattenRelevantData
 
 
 class TestPostProcessor(object):

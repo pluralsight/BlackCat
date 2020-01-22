@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from postprocessing.steps.post_process_step import PostProcessStep
+from blackcat.postprocessing.steps.post_process_step import PostProcessStep
 
 
 class BlackCatPostProcessor(object):

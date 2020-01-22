@@ -1,8 +1,12 @@
 # Changelog
-Document of major or noteworth changes made between versions.
-We use [SemVer](https://semver.org/) for Versioning.
+Document of major or noteworthy changes made between versions.
+We use [SemVer](https://semver.org/) for versioning.
+## 1.0.6
+* Fixed project structure for containers
+
 ##  1.0.5
 * Dockerfile fixes
+
 ##  1.0.4
 * Added support for post-processing steps
 * Made more usable as a module/librar
