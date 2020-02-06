@@ -20,7 +20,7 @@ class BlackCat(object):
                 logging.info(license_info)
             else:
                 # Set a custom source type for splunk
-                if len(logger.handlers) > 0 and isinstance(logger.handlers[0], SplunkHecHandler):
+                if logger.name == 'splunk':
                     # TODO: Should this be configurable?
                     license_info['fields'] = {'sourcetype': logger.handlers[0].sourcetype + '_license'}
 
