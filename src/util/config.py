@@ -57,7 +57,7 @@ class SplunkLoggingBackend(LoggingBackend):
         self.domain = os.getenv('SPLUNK_DOMAIN', config.get('domain'))
         self.port = os.getenv('SPLUNK_PORT', config.get('port'))
         self.proto = config.get('proto')
-        self.source_type = config.get('source_type')
+        self.source_type = config.get('source_type', 'blackcat')
         self.index = config.get('index')
 
         # Get from environment variable or config

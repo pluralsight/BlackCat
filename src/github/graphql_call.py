@@ -3,7 +3,7 @@ import logging
 import re
 import time
 
-from pip._vendor import requests
+import requests
 
 from github.exception import InvalidQueryException
 
@@ -104,6 +104,13 @@ class RepoVulnerabilityCall(GraphQLCall):
                                     node {{
                                       id
                                       url
+                                      licenseInfo {{
+                                          spdxId
+                                          name
+                                          nickname
+                                          pseudoLicense
+                                          body
+                                      }} 
                                       vulnerabilityAlerts(first: 100) {{
                                         edges {{
                                           node {{
