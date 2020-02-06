@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 flake8
-cd src/test
-pytest .
+cd blackcat/
+python3 -m pytest .

@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 
-from main import log_license
-from util.splunk_hec_handler import SplunkHecHandler
+from blackcat.blackcat_controller import BlackCat
+from blackcat.util.splunk_hec_handler import SplunkHecHandler
 
 LICENSE_DAT = {
     "licenseInfo": {
@@ -18,7 +18,7 @@ def test_log_license():
     shell_handler = SplunkHecHandler.__new__(SplunkHecHandler)
     shell_handler.sourcetype = 'test'
     mock_logger.handlers = [shell_handler]
-    log_license(mock_logger, 'test_url', 0, LICENSE_DAT)
+    BlackCat._log_license(mock_logger, 'test_url', 0, LICENSE_DAT)
     mock_logger.info.assert_called()
     mock_logger.info.assert_called_with({'spdxId': 'Apache-2.0',
                                          'name': 'Apache License 2.0',

@@ -5,10 +5,11 @@ import time
 
 import requests
 
-from github.exception import InvalidQueryException
+from blackcat.github.exception import InvalidQueryException
 
 VALID_NAME = re.compile('[A-Za-z]+')
 REQUEST_FMT = "{}{}{ {} }"
+
 
 class GraphQLCall(object):
     ENDPOINT = 'https://api.github.com/graphql'

@@ -3,7 +3,7 @@ ENV PYROOT /pyroot
 ENV PYTHONUSERBASE $PYROOT
 
 WORKDIR /opt/blackcat
-COPY src/ ./src
+COPY blackcat ./blackcat
 COPY config.example.yml ./
 # Make an empty config file if one doesn't exist.
 RUN touch /opt/blackcat/config.yml
@@ -21,10 +21,12 @@ COPY Pipfile* ./
 RUN pip install pipenv
 RUN pipenv install --python 3.7
 RUN PIP_USER=1 PIP_IGNORE_INSTALLED=1 pipenv install --system --deploy --ignore-pipfile
+COPY setup.py ./
+RUN python3 setup.py install
 
 FROM base
 COPY --from=builder $PYROOT/lib $PYROOT/lib
 
 RUN addgroup -S usergroup && adduser -S blackcat -G usergroup
 USER blackcat
-ENTRYPOINT ["python", "src/main.py"]
+ENTRYPOINT ["python", "-m", "blackcat.main"]

@@ -3,10 +3,57 @@
   <description>Github Dependency Vulnerabilities</description>
   <row>
     <panel>
+      <title>Total Finds Over Time</title>
+      <chart>
+        <search>
+          <query>index="blackcat"  | search dismissed_reason=null | spath run_id| spath severity |spath "advisory.id"|rename "advisory.id" as advisory_id |spath manifest_file | eval _time=run_id |eval vid=manifest_file + ";" + advisory_id + ";" + repo_url|timechart dc(vid) as open_vulns span=1d| fields + vid open_vulns _time |timechart sum(open_vulns) as "Open Vulnerabilities" span=1d</query>
+          <earliest>0</earliest>
+          <latest></latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.text">Date</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.text">Open Vulns</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <chart>
         <title>Vulnerabilities By Generic Severity</title>
         <search>
-          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" | spath severity | fields + severity| top limit=5 severity</query>
+          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | search dismissed_reason=null | spath severity | fields + severity| top limit=5 severity</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
@@ -17,7 +64,8 @@
         <option name="charting.chart.rangeValues">[0,30,70,100]</option>
         <option name="charting.chart.style">minimal</option>
         <option name="charting.drilldown">none</option>
-        <option name="charting.gaugeColors">["0x53a051","0xf8be34","0xdc4e41"]</option>
+        <option name="charting.legend.labels">[MODERATE,HIGH,CRITICAL,LOW]</option>
+        <option name="charting.seriesColors">[0xfd8c00, 0xdc0000, 0x780000, 0xfdc500]</option>
         <option name="charting.legend.placement">right</option>
         <option name="height">385</option>
         <option name="refresh.display">progressbar</option>
@@ -28,7 +76,7 @@
       <chart>
         <title>Open Dependency Vulnerabilities Count by Repo (Top Ten)</title>
         <search>
-          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" |spath severity  | spath repo_url | fields + repo_url severity | eval repo=substr(repo_url, 20) |top repo limit=20 by severity |rename count as "Open Vulnerabilities"</query>
+          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  |  search dismissed_reason=null |spath severity  | spath repo_url | fields + repo_url severity | eval repo=substr(repo_url, 20) |top repo limit=20 by severity |rename count as "Open Vulnerabilities"</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
@@ -56,10 +104,14 @@
       <chart>
         <title>Generic Severity Per Run</title>
         <search>
-          <query>index="blackcat"  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" | spath run_id| spath severity | fields + severity run_id |chart count(severity) as "Open Vulnerabilities" over run_id by "severity" | fieldformat run_id = strftime(run_id, "%Y-%m-%d %H:%M:%S UTC") |sort -"Open Vulnerabilities"</query>
+          <query>index="blackcat"  | search dismissed_reason=null | spath run_id| spath severity |spath "advisory.id" |rename "advisory.id" as advisory_id |spath manifest_file |eval vid=manifest_file + ";" +advisory_id + ";" + repo_url| fields + vid severity run_id | eval _time=run_id |timechart dc(vid) as "Open Vulnerabilities" by "severity"</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
+        <!-- critical, high, low, moderate -->
+        <!-- yellow, orange,  red, dark red-->
+        <!-- 0x780000, 0xdc0000, 0xfdc500, 0xfd8c00 -->
+        <option name="charting.seriesColors">[0x780000, 0xdc0000, 0xfdc500, 0xfd8c00]</option>
         <option name="charting.axisTitleX.text">Run Date</option>
         <option name="charting.axisTitleX.visibility">visible</option>
         <option name="charting.axisTitleY.visibility">visible</option>
@@ -76,7 +128,7 @@
       <table>
         <title>Most Vulnerable Repos</title>
         <search>
-          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  | eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used"  | spath repo_url | fields + repo_url | eval repo=substr(repo_url, 20) |stats count(repo_url) as "Open Vulnerabilities" by repo |sort -"Open Vulnerabilities"</query>
+          <query>index="blackcat"  | spath run_id  | eventstats max(run_id) as MaxRunId   | where run_id=MaxRunId  |  search dismissed_reason=null | spath repo_url | fields + repo_url | eval repo=substr(repo_url, 20) |stats count(repo_url) as "Open Vulnerabilities" by repo |sort -"Open Vulnerabilities"</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
@@ -91,7 +143,7 @@
       <chart>
         <title>Vulnerabilities By Packages Per Run</title>
         <search>
-          <query>index="blackcat"| eval dismissed_reason=if(isnull(dismissed_reason),"",dismissed_reason)| search dismissed_reason!="Vulnerable code is not actually used" | spath run_id| spath "package.name" | fields + "package.name" run_id |chart count("package.name") as "Open Vulnerabilities" over run_id by "package.name" | fieldformat run_id = strftime(run_id, "%Y-%m-%d %H:%M:%S UTC")</query>
+          <query>index="blackcat"|  search dismissed_reason=null | spath run_id| spath "package.name" |spath "advisory.id" |rename "advisory.id" as advisory_id |spath manifest_file | eval _time=run_id |eval vid=manifest_file + ";" + advisory_id + ";" + repo_url  | fields + "package.name" vid _time |timechart dc(vid) as "Open Vulnerabilities" by "package.name"</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
@@ -106,6 +158,124 @@
         <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
         <option name="height">268</option>
         <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Top Repos With New Vulnerabilities (Last Seven Days)</title>
+      <chart>
+        <search>
+          <query>index="blackcat" earliest=-1d
+| fieldformat run_id = strftime(run_id, "%Y-%m-%d UTC")
+| stats count by run_id, repo_url
+| rename count as "today_count"
+| join type=outer repo_url [ search
+index="blackcat" earliest=-8d latest=-7d
+| fieldformat run_id = strftime(run_id, "%Y-%m-%d UTC")
+| stats count by run_id, repo_url
+| rename count as "seven_days_ago_count"
+]
+| fillnull seven_days_ago_count value=0
+| eval seven_day_delta = today_count - seven_days_ago_count
+| sort - seven_day_delta
+| head 10
+| eval repo=substr(repo_url, 20)
+| fields - seven_days_ago_count, today_count, run_id, repo_url</query>
+          <earliest>-30m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">all</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="charting.seriesColors">[0xFF0000]</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Top Repos Resolving Vulnerabilities (Last Seven Days)</title>
+      <chart>
+        <search>
+          <query>index="blackcat" earliest=-8d latest=-7d
+| fieldformat run_id = strftime(run_id, "%Y-%m-%d UTC")
+| stats count by run_id, repo_url
+| rename count as "seven_days_ago_count"
+| join type=outer repo_url [ search
+index="blackcat" earliest=-1d
+| fieldformat run_id = strftime(run_id, "%Y-%m-%d UTC")
+| stats count by run_id, repo_url
+| rename count as "today_count"
+]
+| fillnull today_count value=0
+| eval seven_day_delta = today_count - seven_days_ago_count
+| sort seven_day_delta
+| head 10
+| eval repo=substr(repo_url, 20)
+| fields - seven_days_ago_count, today_count, run_id, repo_url</query>
+          <earliest>-30m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">all</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="charting.seriesColors">[0x65A637]</option>
       </chart>
     </panel>
   </row>

@@ -27,8 +27,8 @@ Now that you've configured BlackCat, it can be deployed in a few ways:
 1. Install pipenv: `pip install pipenv`
 2. Install the dependencies (from within the project directory): `pipenv install`
 3. Run the enable command (will enable dependency scans organization-wide, may be noisy):   
-`pipenv run python main.py --enable`
-3. Run: `pipenv run python main.py`
+`pipenv run python blackcat/main.py --enable`
+3. Run: `pipenv run python blackcat/main.py`
 
 #### Using Docker
 1. Install docker
