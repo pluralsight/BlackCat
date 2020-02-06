@@ -1,6 +1,9 @@
 # Changelog
 Document of major or noteworthy changes made between versions.
 We use [SemVer](https://semver.org/) for versioning.
+## 1.1.0
+* Added support for gathering and emitting license data
+
 ## 1.0.6
 * Fixed project structure for containers
 
