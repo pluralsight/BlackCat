@@ -30,4 +30,4 @@ part of the historical record. If multiple changes are included in a commit, con
 smaller commits or adding a list in the message body. Please keep commit bodies short if possible.
 
 ## Maintainers
-* Dylan Katz (dylan-katz@pluralsight.com)
+* Colin Jackson (colin-jackson@pluralsight.com)
